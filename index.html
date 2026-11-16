@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACROSS DIMENSIONS — ISEGYE IDOL Pop-up Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Pretendard:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #130f26;
+      --bg-panel: #1d1738;
+      --card-light: #ffffff;
+      --accent-purple: #7c62e8;
+      --accent-glow: rgba(255, 255, 255, 0.85);
+      --text-light: #f3f1ff;
+      --text-muted: #b8b2d8;
+      --danger: #ff4d6d;
+      --edit-amber: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    /* 상단 헤더 */
+    header {
+      background: linear-gradient(180deg, #0d0a1a 0%, #1c1538 100%);
+      text-align: center;
+      padding: 28px 20px 22px;
+      border-bottom: 1px solid rgba(184, 178, 216, 0.2);
+    }
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      letter-spacing: 3px;
+      color: #fff;
+      text-shadow: 0 0 18px rgba(155, 130, 255, 0.6);
+    }
+    header p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* 클릭 유도 안내 배너 */
+    .guide-banner {
+      max-width: 1420px;
+      margin: 18px auto 0;
+      padding: 12px 20px;
+      background: linear-gradient(90deg, rgba(124, 98, 232, 0.22), rgba(168, 145, 255, 0.32), rgba(124, 98, 232, 0.22));
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.98rem;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .guide-banner span {
+      display: inline-block;
+      background: #fff;
+      color: #1c1538;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* 메인 컨테이너 */
+    .main-wrapper {
+      max-width: 1420px;
+      margin: 20px auto 60px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 26px;
+      align-items: start;
+    }
+
+    @media (max-width: 1080px) {
+      .main-wrapper { grid-template-columns: 1fr; }
+    }
+
+    /* 페이지 전환 탭 */
+    .page-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+      background: var(--bg-panel);
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .page-tab {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+      padding: 8px 13px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .page-tab:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .page-tab.active {
+      background: #fff;
+      color: #16112b;
+      border-color: #fff;
+      font-weight: 700;
+    }
+
+    /* 포스터 이미지 래퍼 */
+    .posters-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .poster-frame {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #231c42;
+    }
+    .poster-frame img {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    /* 투명 핫스팟 영역 */
+    .hotspot {
+      position: absolute;
+      border: 2px solid transparent;
+      background-color: transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+    .hotspot:hover {
+      border: 2px solid #ffffff;
+      background-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.85), inset 0 0 10px rgba(255, 255, 255, 0.35);
+      z-index: 10;
+    }
+    .hotspot:active {
+      transform: scale(0.98);
+    }
+
+    .hotspot::after {
+      content: attr(data-label);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(16, 12, 34, 0.94);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 20;
+    }
+    .hotspot:hover::after {
+      opacity: 1;
+    }
+
+    .hotspot .selected-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #ffffff;
+      color: #16112b;
+      font-size: 0.72rem;
+      font-weight: 800;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 5px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+
+    /* 우측 장바구니 사이드바 */
+    .cart-sidebar {
+      background: #ffffff;
+      color: #1a1829;
+      border-radius: 18px;
+      padding: 22px;
+      position: sticky;
+      top: 20px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+    .cart-sidebar.editing-mode {
+      border: 3px solid var(--edit-amber);
+    }
+
+    /* 수정 모드 안내 배너 */
+    .edit-mode-banner {
+      display: none;
+      background: #fffbeb;
+      border: 1px solid #fcd34d;
+      color: #92400e;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      font-size: 0.83rem;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .edit-mode-banner.active {
+      display: flex;
+    }
+    .edit-mode-banner strong {
+      color: #b45309;
+    }
+    .cancel-edit-btn {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      color: #92400e;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .cancel-edit-btn:hover {
+      background: #fde68a;
+    }
+
+    .cart-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #1c1538;
+      margin-bottom: 14px;
+    }
+    .cart-top h2 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #1c1538;
+    }
+    .reset-btn {
+      background: none;
+      border: none;
+      color: #6e698a;
+      font-size: 0.82rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .reset-btn:hover { color: var(--danger); }
+
+    .cart-items {
+      max-height: 250px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+    .cart-empty {
+      text-align: center;
+      padding: 28px 12px;
+      background: #f6f5fc;
+      border: 1px dashed #cfc9eb;
+      border-radius: 12px;
+      color: #7c769c;
+      font-size: 0.86rem;
+    }
+
+    .cart-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 9px 11px;
+      background: #f8f7fd;
+      border: 1px solid #e6e2f5;
+      border-radius: 11px;
+    }
+    .cart-row-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .cart-row-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #1a1829;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cart-row-opt {
+      font-size: 0.76rem;
+      color: #5e587d;
+    }
+    .cart-row-price {
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #5c43c7;
+      margin-top: 2px;
+    }
+
+    .qty-box {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #fff;
+      border: 1px solid #d5cfee;
+      border-radius: 8px;
+      padding: 2px 4px;
+    }
+    .qty-box button {
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      cursor: pointer;
+      color: #1c1538;
+      border-radius: 4px;
+    }
+    .qty-box button:hover { background: #ede9fc; }
+    .qty-box span {
+      font-size: 0.84rem;
+      font-weight: 700;
+      min-width: 16px;
+      text-align: center;
+    }
+    .remove-row {
+      background: none;
+      border: none;
+      color: #a39ec0;
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 2px 4px;
+    }
+    .remove-row:hover { color: var(--danger); }
+
+    /* 구매 특전 게이지 */
+    .benefit-panel {
+      background: #f2eeff;
+      border: 1px solid #d3c7ff;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .benefit-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: #4f3ca8;
+      margin-bottom: 4px;
+    }
+    .benefit-now {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #1c1538;
+      margin-bottom: 7px;
+    }
+    .bar-bg {
+      width: 100%;
+      height: 7px;
+      background: #d8cefc;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #6347d1, #9b82ff);
+      transition: width 0.25s ease;
+    }
+    .benefit-tip {
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: #5642b0;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 10px 2px;
+      border-top: 1px solid #e6e2f5;
+      margin-bottom: 10px;
+    }
+    .total-row span:first-child {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #5e587d;
+    }
+    .total-amount {
+      font-size: 1.42rem;
+      font-weight: 800;
+      color: #1c1538;
+    }
+
+    .order-btn {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #251c4d 0%, #5b41c7 100%);
+      color: #fff;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(91, 65, 199, 0.3);
+      transition: opacity 0.2s, background 0.2s;
+    }
+    .order-btn:hover { opacity: 0.95; }
+    .order-btn.save-edit {
+      background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+    }
+
+    /* 저장된 장바구니 묶음 섹션 */
+    .saved-carts-section {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 2px dashed #dcd6f7;
+    }
+    .saved-carts-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .saved-carts-header h3 {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: #1c1538;
+    }
+    .saved-count-badge {
+      background: #ede9fc;
+      color: #5b41c7;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+    .saved-carts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .saved-empty {
+      text-align: center;
+      padding: 18px 10px;
+      background: #f9f8fd;
+      border-radius: 10px;
+      color: #8b85a8;
+      font-size: 0.82rem;
+    }
+
+    .bundle-card {
+      border: 1.5px solid #e4dff7;
+      background: #faf9fe;
+      border-radius: 12px;
+      padding: 11px 13px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .bundle-card:hover {
+      border-color: #9b82ff;
+      background: #f4f1ff;
+    }
+    .bundle-card.selected {
+      border-color: #5b41c7;
+      background: #f0ecff;
+      box-shadow: 0 3px 10px rgba(91, 65, 199, 0.14);
+    }
+    .bundle-card.editing {
+      border-color: #f59e0b;
+      background: #fffbeb;
+    }
+    .bundle-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .bundle-name {
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #1c1538;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bundle-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: #f59e0b;
+      color: #fff;
+    }
+    .bundle-meta {
+      font-size: 0.8rem;
+      color: #5e587d;
+      margin-top: 3px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .bundle-meta strong {
+      color: #4f3ca8;
+    }
+
+    /* 묶음 선택 시 펼쳐지는 상세 및 수정/삭제 영역 */
+    .bundle-detail {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #d9d1f7;
+    }
+    .bundle-card.selected .bundle-detail {
+      display: block;
+    }
+    .bundle-items-preview {
+      list-style: none;
+      font-size: 0.79rem;
+      color: #383352;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 10px;
+      background: #fff;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #e6e1fa;
+    }
+    .bundle-items-preview li {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .bundle-items-preview li span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .bundle-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .bundle-actions button {
+      flex: 1;
+      padding: 7px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    .bundle-actions button:hover {
+      opacity: 0.88;
+    }
+    .btn-edit-bundle {
+      background: #251c4d;
+      color: #fff;
+    }
+    .btn-delete-bundle {
+      background: #ffe4e8;
+      color: #d92648;
+    }
+
+    /* 모달 공통 */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 8, 22, 0.75);
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card {
+      background: #fff;
+      color: #1a1829;
+      padding: 24px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 370px;
+      text-align: center;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+    .modal-card h3 { font-size: 1.12rem; margin-bottom: 6px; color: #1c1538; }
+    .modal-card p { font-size: 0.85rem; color: #64607d; margin-bottom: 16px; }
+    .size-btns { display: flex; gap: 10px; margin-bottom: 12px; }
+    .size-btns button {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #251c4d;
+      background: #f5f3ff;
+      color: #251c4d;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .size-btns button:hover {
+      background: #251c4d;
+      color: #fff;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* 장바구니 이름 입력 모달 전용 스타일 */
+    .bundle-name-input {
+      width: 100%;
+      padding: 11px 13px;
+      border: 2px solid #d5cfee;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .bundle-name-input:focus {
+      border-color: #5b41c7;
+    }
+    .modal-confirm-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .modal-confirm-btns button {
+      flex: 1;
+      padding: 11px;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-modal-cancel {
+      background: #f1effa;
+      color: #5e587d;
+    }
+    .btn-modal-save {
+      background: #5b41c7;
+      color: #fff;
+    }
+
+    /* 하단 안내 규정 */
+    .notice-footer {
+      max-width: 1420px;
+      margin: 0 auto 60px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .notice-footer { grid-template-columns: 1fr; } }
+    .notice-panel {
+      background: var(--bg-panel);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 20px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+    .notice-panel h3 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .notice-panel ul {
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .notice-panel strong { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ACROSS DIMENSIONS</h1>
+    <p>ISEGYE IDOL The 2nd Mini Album Pop-up Store — 인터랙티브 MD 장바구니</p>
+  </header>
+
+  <div class="guide-banner">
+    <span>GUIDE</span> 포스터 이미지 속 <strong>원하는 캐릭터나 물품을 직접 클릭</strong>해 담은 뒤, 이름을 지정해 장바구니 묶음으로 저장하세요!
+  </div>
+
+  <div class="main-wrapper">
+    <!-- 좌측: 포스터 카탈로그 -->
+    <div>
+      <div class="page-tabs">
+        <button class="page-tab active" onclick="selectPage('ALL', this)">전체 상품 보기 (8장)</button>
+        <button class="page-tab" onclick="selectPage(1, this)">1. SEDOLIZ (01~03)</button>
+        <button class="page-tab" onclick="selectPage(2, this)">2. SEDOLIZ (04~06)</button>
+        <button class="page-tab" onclick="selectPage(3, this)">3. MERCH (01~04)</button>
+        <button class="page-tab" onclick="selectPage(4, this)">4. MERCH (05~06)</button>
+        <button class="page-tab" onclick="selectPage(5, this)">5. MERCH (07~10)</button>
+        <button class="page-tab" onclick="selectPage(6, this)">6. MERCH (11~14)</button>
+        <button class="page-tab" onclick="selectPage(7, this)">7. MERCH (15~19)</button>
+        <button class="page-tab" onclick="selectPage(8, this)">8. BLIND ITEM (01~03)</button>
+      </div>
+
+      <div id="posters-container" class="posters-container"></div>
+    </div>
+
+    <!-- 우측: 상품 선택 및 장바구니 묶음 관리 -->
+    <aside id="cart-sidebar" class="cart-sidebar">
+      <!-- 수정 모드일 때만 표시되는 상단 바 -->
+      <div id="edit-mode-banner" class="edit-mode-banner">
+        <div>✏️ <strong id="editing-bundle-title"></strong> 수정 중<br><small>포스터를 클릭해 상품을 추가하거나 목록에서 제거하세요.</small></div>
+        <button class="cancel-edit-btn" onclick="cancelEditMode()">수정 취소</button>
+      </div>
+
+      <div class="cart-top">
+        <h2 id="workspace-title">선택한 상품 (<span id="cart-total-qty">0</span>)</h2>
+        <button class="reset-btn" onclick="clearCart()">전체 비우기</button>
+      </div>
+
+      <div id="cart-items" class="cart-items">
+        <div class="cart-empty">왼쪽 이미지에서 원하는 캐릭터나<br>굿즈를 클릭해 추가해 주세요.</div>
+      </div>
+
+      <div class="benefit-panel">
+        <div class="benefit-title">🎁 구매 특전 (5만원당 랜덤 1종 / 30만원 이상 6종 1세트)</div>
+        <div id="benefit-now" class="benefit-now">현재 증정 특전: 없음</div>
+        <div class="bar-bg"><div id="benefit-bar" class="bar-fill"></div></div>
+        <div id="benefit-tip" class="benefit-tip">50,000원 이상 구매 시 랜덤 포토카드 1종 증정!</div>
+      </div>
+
+      <div class="total-row">
+        <span>총 결제 예정 금액</span>
+        <span class="total-amount"><span id="total-price">0</span>원</span>
+      </div>
+
+      <button id="main-action-btn" class="order-btn" onclick="handleMainAction()">장바구니에 담기</button>
+
+      <!-- 저장된 장바구니 묶음 목록 -->
+      <div class="saved-carts-section">
+        <div class="saved-carts-header">
+          <h3>🛍️ 장바구니 목록</h3>
+          <span id="saved-count-badge" class="saved-count-badge">0개 묶음</span>
+        </div>
+        <div id="saved-carts-list" class="saved-carts-list">
+          <div class="saved-empty">저장된 장바구니 묶음이 없습니다.<br>상품을 담은 후 '장바구니에 담기'를 눌러보세요.</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- 티셔츠 사이즈 선택 팝업 -->
+  <div id="size-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <h3 id="modal-member-title">T-SHIRT 사이즈 선택</h3>
+      <p>원하시는 티셔츠 사이즈를 선택해 주세요. (₩45,000)</p>
+      <div class="size-btns">
+        <button onclick="confirmTshirtSize('1 size')">1 size<br><small>(어깨 52.5 / 총장 72.5)</small></button>
+        <button onclick="confirmTshirtSize('2 size')">2 size<br><small>(어깨 59 / 총장 79)</small></button>
+      </div>
+      <button class="modal-close" onclick="closeSizeModal()">취소</button>
+    </div>
+  </div>
+
+  <!-- 장바구니 묶음 이름 지정 팝업 -->
+  <div id="bundle-name-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <h3>장바구니 묶음 이름 지정</h3>
+      <p>이 상품 목록을 저장할 장바구니 이름을 입력해 주세요.</p>
+      <input type="text" id="bundle-name-input" class="bundle-name-input" placeholder="예: 1차 구매 리스트, 최애 세트 등" maxlength="30" onkeydown="if(event.key==='Enter') saveNewBundle()">
+      <div class="modal-confirm-btns">
+        <button class="btn-modal-cancel" onclick="closeBundleNameModal()">취소</button>
+        <button class="btn-modal-save" onclick="saveNewBundle()">저장하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 하단 안내 및 규정 -->
+  <section class="notice-footer">
+    <div class="notice-panel">
+      <h3>구매 특전 및 수량 제한 안내</h3>
+      <ul>
+        <li><strong>구매 특전:</strong> 포토카드 (5만원 당 랜덤 1종, 30만원 이상 6종 1세트 지급)</li>
+        <li><strong>구매 수량 제한:</strong> 예외 상품 외 모든 상품은 <strong>품목별, 옵션별 1인 2개</strong>까지 구매 가능</li>
+        <li><strong>예외 1:</strong> &lt;RE:WIND&gt; POCKET WATCH — 1인 최대 <strong>1개</strong></li>
+        <li><strong>예외 2:</strong> OFFICIAL PLUSH SEDOLIZ — 옵션별(멤버별) 1인 최대 <strong>1개</strong></li>
+        <li><strong>예외 3:</strong> RANDOM PHOTOCARD PACK — 1인 최대 <strong>5개</strong></li>
+        <li>벤딩머신 이용 금액은 특전 합산에서 제외되며, 특전은 랜덤 지급으로 교환 불가합니다.</li>
+      </ul>
+    </div>
+    <div class="notice-panel">
+      <h3>MD 구매 안내 및 교환/환불 규정</h3>
+      <ul>
+        <li>결제 가능 수단: 현금, 신용카드, 체크카드 (실물카드만 가능, 모바일페이/앱카드 불가)</li>
+        <li>쇼핑백 및 봉투는 무상 제공되지 않으며, 필요 시 현장에서 유상 구매 가능합니다.</li>
+        <li>불량 상품에 한해 <strong>구매 당일, 구매처 운영 시간 내</strong> 교환 및 환불이 가능합니다. (모든 구성품·특전·영수증 지참 필수)</li>
+        <li>상품 라벨 손상, 고객 책임 훼손, 착용·오염·향수·세탁 흔적이 있는 경우 및 운영 종료 후에는 교환/환불이 불가합니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <script>
+    const PAGES = [
+      {
+        page: 1,
+        src: "Berriz_20261111232857(1).jpg",
+        alt: "SEDOLIZ 01~03",
+        spots: [
+          { id: "SED01-NENE", name: "OFFICIAL PLUSH SEDOLIZ", opt: "NENE", price: 20000, limit: 1, t: 25.0, l: 9.5, w: 11.8, h: 14.0 },
+          { id: "SED01-HAPPY", name: "OFFICIAL PLUSH SEDOLIZ", opt: "HAPPY", price: 20000, limit: 1, t: 25.0, l: 22.0, w: 16.0, h: 14.0 },
+          { id: "SED01-LILACHU", name: "OFFICIAL PLUSH SEDOLIZ", opt: "LILACHU", price: 20000, limit: 1, t: 25.0, l: 38.8, w: 11.8, h: 14.0 },
+          { id: "SED01-LULU", name: "OFFICIAL PLUSH SEDOLIZ", opt: "LULU", price: 20000, limit: 1, t: 25.0, l: 51.8, w: 11.8, h: 14.0 },
+          { id: "SED01-KING", name: "OFFICIAL PLUSH SEDOLIZ", opt: "KING-A NYANG", price: 20000, limit: 1, t: 25.0, l: 64.8, w: 12.2, h: 14.0 },
+          { id: "SED01-CHANY", name: "OFFICIAL PLUSH SEDOLIZ", opt: "CHANY", price: 20000, limit: 1, t: 25.0, l: 78.2, w: 12.2, h: 14.0 },
+
+          { id: "SED02-NENE", name: "SEDOLIZ PLUSH OUTFIT", opt: "NENE", price: 10000, limit: 2, t: 49.5, l: 11.5, w: 9.5, h: 8.5 },
+          { id: "SED02-HAPPY", name: "SEDOLIZ PLUSH OUTFIT", opt: "HAPPY", price: 10000, limit: 2, t: 49.5, l: 21.8, w: 11.5, h: 8.5 },
+          { id: "SED02-LILACHU", name: "SEDOLIZ PLUSH OUTFIT", opt: "LILACHU", price: 10000, limit: 2, t: 49.5, l: 34.0, w: 9.5, h: 8.5 },
+          { id: "SED02-LULU", name: "SEDOLIZ PLUSH OUTFIT", opt: "LULU", price: 10000, limit: 2, t: 58.8, l: 11.5, w: 9.5, h: 8.2 },
+          { id: "SED02-KING", name: "SEDOLIZ PLUSH OUTFIT", opt: "KING-A NYANG", price: 10000, limit: 2, t: 58.8, l: 22.8, w: 9.5, h: 8.2 },
+          { id: "SED02-CHANY", name: "SEDOLIZ PLUSH OUTFIT", opt: "CHANY", price: 10000, limit: 2, t: 58.8, l: 34.0, w: 9.5, h: 8.2 },
+
+          { id: "SED02-NENE", name: "SEDOLIZ PLUSH OUTFIT", opt: "NENE", price: 10000, limit: 2, t: 71.2, l: 8.5, w: 12.5, h: 7.0 },
+          { id: "SED02-HAPPY", name: "SEDOLIZ PLUSH OUTFIT", opt: "HAPPY", price: 10000, limit: 2, t: 71.2, l: 21.5, w: 12.5, h: 7.0 },
+          { id: "SED02-LILACHU", name: "SEDOLIZ PLUSH OUTFIT", opt: "LILACHU", price: 10000, limit: 2, t: 71.2, l: 34.5, w: 12.5, h: 7.0 },
+          { id: "SED02-LULU", name: "SEDOLIZ PLUSH OUTFIT", opt: "LULU", price: 10000, limit: 2, t: 79.2, l: 8.5, w: 12.5, h: 7.0 },
+          { id: "SED02-KING", name: "SEDOLIZ PLUSH OUTFIT", opt: "KING-A NYANG", price: 10000, limit: 2, t: 79.2, l: 21.5, w: 12.5, h: 7.0 },
+          { id: "SED02-CHANY", name: "SEDOLIZ PLUSH OUTFIT", opt: "CHANY", price: 10000, limit: 2, t: 79.2, l: 34.5, w: 12.5, h: 7.0 },
+
+          { id: "SED03-NENE", name: "SEDOLIZ LIGHT STICK PLUSH BAND", opt: "NENE", price: 18000, limit: 2, t: 70.0, l: 53.5, w: 11.5, h: 8.5 },
+          { id: "SED03-HAPPY", name: "SEDOLIZ LIGHT STICK PLUSH BAND", opt: "HAPPY", price: 18000, limit: 2, t: 70.0, l: 66.8, w: 11.5, h: 8.5 },
+          { id: "SED03-LILACHU", name: "SEDOLIZ LIGHT STICK PLUSH BAND", opt: "LILACHU", price: 18000, limit: 2, t: 70.0, l: 80.2, w: 11.5, h: 8.5 },
+          { id: "SED03-LULU", name: "SEDOLIZ LIGHT STICK PLUSH BAND", opt: "LULU", price: 18000, limit: 2, t: 79.5, l: 53.5, w: 11.5, h: 8.5 },
+          { id: "SED03-KING", name: "SEDOLIZ LIGHT STICK PLUSH BAND", opt: "KING-A NYANG", price: 18000, limit: 2, t: 79.5, l: 66.8, w: 11.5, h: 8.5 },
+          { id: "SED03-CHANY", name: "SEDOLIZ LIGHT STICK PLUSH BAND", opt: "CHANY", price: 18000, limit: 2, t: 79.5, l: 80.2, w: 11.5, h: 8.5 }
+        ]
+      },
+      {
+        page: 2,
+        src: "Berriz_20261111232857(2).jpg",
+        alt: "SEDOLIZ 04~06",
+        spots: [
+          { id: "SED04-NENE", name: "SEDOLIZ GOOD LUCK PLUSH KEYRING", opt: "NENE", price: 18000, limit: 2, t: 25.5, l: 8.2, w: 13.0, h: 12.5 },
+          { id: "SED04-HAPPY", name: "SEDOLIZ GOOD LUCK PLUSH KEYRING", opt: "HAPPY", price: 18000, limit: 2, t: 25.5, l: 21.8, w: 13.8, h: 12.5 },
+          { id: "SED04-LILACHU", name: "SEDOLIZ GOOD LUCK PLUSH KEYRING", opt: "LILACHU", price: 18000, limit: 2, t: 25.5, l: 36.2, w: 13.0, h: 12.5 },
+          { id: "SED04-LULU", name: "SEDOLIZ GOOD LUCK PLUSH KEYRING", opt: "LULU", price: 18000, limit: 2, t: 25.5, l: 50.2, w: 13.0, h: 12.5 },
+          { id: "SED04-KING", name: "SEDOLIZ GOOD LUCK PLUSH KEYRING", opt: "KING-A NYANG", price: 18000, limit: 2, t: 25.5, l: 64.2, w: 13.0, h: 12.5 },
+          { id: "SED04-CHANY", name: "SEDOLIZ GOOD LUCK PLUSH KEYRING", opt: "CHANY", price: 18000, limit: 2, t: 25.5, l: 78.2, w: 13.5, h: 12.5 },
+
+          { id: "SED05-NENE", name: "SEDOLIZ LUCKY CHARM", opt: "NENE", price: 10000, limit: 2, t: 51.5, l: 9.0, w: 11.5, h: 16.5 },
+          { id: "SED05-HAPPY", name: "SEDOLIZ LUCKY CHARM", opt: "HAPPY", price: 10000, limit: 2, t: 51.5, l: 22.0, w: 11.5, h: 16.5 },
+          { id: "SED05-LILACHU", name: "SEDOLIZ LUCKY CHARM", opt: "LILACHU", price: 10000, limit: 2, t: 51.5, l: 35.0, w: 11.5, h: 16.5 },
+          { id: "SED05-LULU", name: "SEDOLIZ LUCKY CHARM", opt: "LULU", price: 10000, limit: 2, t: 70.5, l: 9.0, w: 11.5, h: 16.5 },
+          { id: "SED05-KING", name: "SEDOLIZ LUCKY CHARM", opt: "KING-A NYANG", price: 10000, limit: 2, t: 70.5, l: 22.0, w: 11.5, h: 16.5 },
+          { id: "SED05-CHANY", name: "SEDOLIZ LUCKY CHARM", opt: "CHANY", price: 10000, limit: 2, t: 70.5, l: 35.0, w: 11.5, h: 16.5 },
+
+          { id: "SED06-INE", name: "SEDOLIZ MINI DIGITAL CAMERA", opt: "INE", price: 42000, limit: 2, t: 52.0, l: 53.0, w: 18.0, h: 7.5 },
+          { id: "SED06-JING", name: "SEDOLIZ MINI DIGITAL CAMERA", opt: "JINGBURGER", price: 42000, limit: 2, t: 52.0, l: 73.0, w: 18.0, h: 7.5 },
+          { id: "SED06-LILPA", name: "SEDOLIZ MINI DIGITAL CAMERA", opt: "LILPA", price: 42000, limit: 2, t: 60.5, l: 53.0, w: 18.0, h: 7.5 },
+          { id: "SED06-JURURU", name: "SEDOLIZ MINI DIGITAL CAMERA", opt: "JURURU", price: 42000, limit: 2, t: 60.5, l: 73.0, w: 18.0, h: 7.5 },
+          { id: "SED06-GOSEGU", name: "SEDOLIZ MINI DIGITAL CAMERA", opt: "GOSEGU", price: 42000, limit: 2, t: 69.0, l: 53.0, w: 18.0, h: 7.5 },
+          { id: "SED06-VIICHAN", name: "SEDOLIZ MINI DIGITAL CAMERA", opt: "VIICHAN", price: 42000, limit: 2, t: 69.0, l: 73.0, w: 18.0, h: 7.5 }
+        ]
+      },
+      {
+        page: 3,
+        src: "Berriz_20261111232857(3).jpg",
+        alt: "MERCH LIST 01~04",
+        spots: [
+          { id: "MER01", name: "<RE:WIND> POCKET WATCH", opt: "1 TYPE", price: 68000, limit: 1, t: 24.5, l: 11.0, w: 34.0, h: 19.5 },
+          { id: "MER02", name: "OFFICIAL MINI LIGHT STICK KEYRING", opt: "1 TYPE", price: 24000, limit: 2, t: 24.5, l: 56.0, w: 32.0, h: 16.5 },
+          { id: "MER03", name: "RANDOM PHOTOCARD PACK", opt: "RANDOM 2EA", price: 5000, limit: 5, t: 54.5, l: 11.0, w: 34.5, h: 34.0 },
+          { id: "MER04", name: "PAPER BOOKMARK SET", opt: "6EA 1SET", price: 24000, limit: 2, t: 50.5, l: 53.5, w: 38.0, h: 39.5 }
+        ]
+      },
+      {
+        page: 4,
+        src: "Berriz_20261111232857(4).jpg",
+        alt: "MERCH LIST 05~06",
+        spots: [
+          { id: "MER05-STAR", name: "MINI X-BANNER POSTER", opt: "STAR ver.", price: 9000, limit: 2, t: 23.5, l: 22.0, w: 14.5, h: 21.5 },
+          { id: "MER05-RACE", name: "MINI X-BANNER POSTER", opt: "RACE ver.", price: 9000, limit: 2, t: 23.5, l: 43.0, w: 14.5, h: 21.5 },
+          { id: "MER05-LOVE", name: "MINI X-BANNER POSTER", opt: "Love Cell ver.", price: 9000, limit: 2, t: 23.5, l: 64.0, w: 14.5, h: 21.5 },
+
+          { id: "MER06-S-INE", name: "ACRYLIC STAND (STAR ver.)", opt: "INE", price: 18000, limit: 2, t: 52.5, l: 9.5, w: 8.5, h: 15.0 },
+          { id: "MER06-S-JING", name: "ACRYLIC STAND (STAR ver.)", opt: "JINGBURGER", price: 18000, limit: 2, t: 52.5, l: 18.5, w: 8.5, h: 15.0 },
+          { id: "MER06-S-LILPA", name: "ACRYLIC STAND (STAR ver.)", opt: "LILPA", price: 18000, limit: 2, t: 52.5, l: 27.5, w: 8.5, h: 15.0 },
+          { id: "MER06-S-JURURU", name: "ACRYLIC STAND (STAR ver.)", opt: "JURURU", price: 18000, limit: 2, t: 52.5, l: 36.5, w: 8.5, h: 15.0 },
+          { id: "MER06-S-GOSEGU", name: "ACRYLIC STAND (STAR ver.)", opt: "GOSEGU", price: 18000, limit: 2, t: 52.5, l: 45.2, w: 8.5, h: 15.0 },
+          { id: "MER06-S-VIICHAN", name: "ACRYLIC STAND (STAR ver.)", opt: "VIICHAN", price: 18000, limit: 2, t: 52.5, l: 54.0, w: 8.5, h: 15.0 },
+
+          { id: "MER06-R-INE", name: "ACRYLIC STAND (RACE ver.)", opt: "INE", price: 18000, limit: 2, t: 72.0, l: 9.5, w: 8.5, h: 15.0 },
+          { id: "MER06-R-JING", name: "ACRYLIC STAND (RACE ver.)", opt: "JINGBURGER", price: 18000, limit: 2, t: 72.0, l: 18.5, w: 8.5, h: 15.0 },
+          { id: "MER06-R-LILPA", name: "ACRYLIC STAND (RACE ver.)", opt: "LILPA", price: 18000, limit: 2, t: 72.0, l: 27.5, w: 8.5, h: 15.0 },
+          { id: "MER06-R-JURURU", name: "ACRYLIC STAND (RACE ver.)", opt: "JURURU", price: 18000, limit: 2, t: 72.0, l: 36.5, w: 8.5, h: 15.0 },
+          { id: "MER06-R-GOSEGU", name: "ACRYLIC STAND (RACE ver.)", opt: "GOSEGU", price: 18000, limit: 2, t: 72.0, l: 45.2, w: 8.5, h: 15.0 },
+          { id: "MER06-R-VIICHAN", name: "ACRYLIC STAND (RACE ver.)", opt: "VIICHAN", price: 18000, limit: 2, t: 72.0, l: 54.0, w: 8.5, h: 15.0 }
+        ]
+      },
+      {
+        page: 5,
+        src: "Berriz_20261111232857(5).jpg",
+        alt: "MERCH LIST 07~10",
+        spots: [
+          { id: "MER07", name: "DESK MAT", opt: "1 TYPE", price: 24000, limit: 2, t: 24.0, l: 9.5, w: 37.5, h: 16.5 },
+
+          { id: "MER09-INE", name: "VOICE KEYRING", opt: "INE", price: 22000, limit: 2, t: 50.5, l: 10.0, w: 11.5, h: 16.0 },
+          { id: "MER09-JING", name: "VOICE KEYRING", opt: "JINGBURGER", price: 22000, limit: 2, t: 50.5, l: 22.8, w: 11.5, h: 16.0 },
+          { id: "MER09-LILPA", name: "VOICE KEYRING", opt: "LILPA", price: 22000, limit: 2, t: 50.5, l: 35.5, w: 11.5, h: 16.0 },
+          { id: "MER09-JURURU", name: "VOICE KEYRING", opt: "JURURU", price: 22000, limit: 2, t: 69.5, l: 10.0, w: 11.5, h: 16.0 },
+          { id: "MER09-GOSEGU", name: "VOICE KEYRING", opt: "GOSEGU", price: 22000, limit: 2, t: 69.5, l: 22.8, w: 11.5, h: 16.0 },
+          { id: "MER09-VIICHAN", name: "VOICE KEYRING", opt: "VIICHAN", price: 22000, limit: 2, t: 69.5, l: 35.5, w: 11.5, h: 16.0 },
+
+          { id: "MER08-INE", name: "MINIATURE STRAP", opt: "INE", price: 16000, limit: 2, t: 24.0, l: 54.0, w: 12.0, h: 18.0 },
+          { id: "MER08-JING", name: "MINIATURE STRAP", opt: "JINGBURGER", price: 16000, limit: 2, t: 24.0, l: 67.0, w: 12.0, h: 18.0 },
+          { id: "MER08-LILPA", name: "MINIATURE STRAP", opt: "LILPA", price: 16000, limit: 2, t: 24.0, l: 80.0, w: 12.0, h: 18.0 },
+          { id: "MER08-JURURU", name: "MINIATURE STRAP", opt: "JURURU", price: 16000, limit: 2, t: 44.5, l: 54.0, w: 12.0, h: 18.0 },
+          { id: "MER08-GOSEGU", name: "MINIATURE STRAP", opt: "GOSEGU", price: 16000, limit: 2, t: 44.5, l: 67.0, w: 12.0, h: 18.0 },
+          { id: "MER08-VIICHAN", name: "MINIATURE STRAP", opt: "VIICHAN", price: 16000, limit: 2, t: 44.5, l: 80.0, w: 12.0, h: 18.0 },
+
+          { id: "MER10", name: "MESH TRUCKER", opt: "FREE", price: 40000, limit: 2, t: 74.5, l: 55.0, w: 34.0, h: 14.5 }
+        ]
+      },
+      {
+        page: 6,
+        src: "Berriz_20261111232857(6).jpg",
+        alt: "MERCH LIST 11~14",
+        spots: [
+          { id: "MER11", name: "VARSITY JACKET", opt: "FREE", price: 178000, limit: 2, t: 24.5, l: 9.0, w: 38.5, h: 29.0 },
+
+          { id: "MER12-INE", name: "CUSTOM PATCH SET", opt: "INE (99)", price: 12000, limit: 2, t: 69.5, l: 27.0, w: 6.5, h: 9.0 },
+          { id: "MER12-JING", name: "CUSTOM PATCH SET", opt: "JINGBURGER (77)", price: 12000, limit: 2, t: 69.5, l: 34.8, w: 6.5, h: 9.0 },
+          { id: "MER12-LILPA", name: "CUSTOM PATCH SET", opt: "LILPA (07)", price: 12000, limit: 2, t: 69.5, l: 42.5, w: 6.5, h: 9.0 },
+          { id: "MER12-JURURU", name: "CUSTOM PATCH SET", opt: "JURURU (06)", price: 12000, limit: 2, t: 79.5, l: 27.0, w: 6.5, h: 9.0 },
+          { id: "MER12-GOSEGU", name: "CUSTOM PATCH SET", opt: "GOSEGU (300)", price: 12000, limit: 2, t: 79.5, l: 34.8, w: 6.5, h: 9.0 },
+          { id: "MER12-VIICHAN", name: "CUSTOM PATCH SET", opt: "VIICHAN (42)", price: 12000, limit: 2, t: 79.5, l: 42.5, w: 6.5, h: 9.0 },
+
+          { id: "MER13", name: "WIND BREAKER", opt: "FREE", price: 99000, limit: 2, t: 27.5, l: 52.5, w: 40.5, h: 27.5 },
+
+          { id: "MER14-INE", name: "T-SHIRT", opt: "INE", price: 45000, limit: 2, isTshirt: true, t: 81.5, l: 68.5, w: 3.6, h: 5.5 },
+          { id: "MER14-JING", name: "T-SHIRT", opt: "JINGBURGER", price: 45000, limit: 2, isTshirt: true, t: 81.5, l: 72.3, w: 3.6, h: 5.5 },
+          { id: "MER14-LILPA", name: "T-SHIRT", opt: "LILPA", price: 45000, limit: 2, isTshirt: true, t: 81.5, l: 76.1, w: 3.6, h: 5.5 },
+          { id: "MER14-JURURU", name: "T-SHIRT", opt: "JURURU", price: 45000, limit: 2, isTshirt: true, t: 81.5, l: 79.9, w: 3.6, h: 5.5 },
+          { id: "MER14-GOSEGU", name: "T-SHIRT", opt: "GOSEGU", price: 45000, limit: 2, isTshirt: true, t: 81.5, l: 83.7, w: 3.6, h: 5.5 },
+          { id: "MER14-VIICHAN", name: "T-SHIRT", opt: "VIICHAN", price: 45000, limit: 2, isTshirt: true, t: 81.5, l: 87.5, w: 3.6, h: 5.5 }
+        ]
+      },
+      {
+        page: 7,
+        src: "Berriz_20261111232857(7).jpg",
+        alt: "MERCH LIST 15~19",
+        spots: [
+          { id: "MER15", name: "BRACELET", opt: "1 TYPE", price: 26000, limit: 2, t: 24.0, l: 17.0, w: 22.0, h: 16.5 },
+          { id: "MER16", name: "METAL BADGE SET", opt: "2EA 1SET", price: 15000, limit: 2, t: 50.5, l: 14.0, w: 28.0, h: 9.5 },
+          { id: "MER18", name: "REUSABLE BAG", opt: "1 TYPE", price: 6000, limit: 2, t: 70.5, l: 8.5, w: 38.5, h: 18.5 },
+          { id: "MER17", name: "TECH POUCH SET", opt: "1 TYPE", price: 28000, limit: 2, t: 23.5, l: 55.0, w: 34.0, h: 31.0 },
+          { id: "MER19-INE", name: "STICKER PACK", opt: "INE", price: 10000, limit: 2, t: 66.5, l: 52.5, w: 12.5, h: 11.0 },
+          { id: "MER19-JING", name: "STICKER PACK", opt: "JINGBURGER", price: 10000, limit: 2, t: 66.5, l: 66.0, w: 12.5, h: 11.0 },
+          { id: "MER19-LILPA", name: "STICKER PACK", opt: "LILPA", price: 10000, limit: 2, t: 66.5, l: 79.5, w: 12.5, h: 11.0 },
+          { id: "MER19-JURURU", name: "STICKER PACK", opt: "JURURU", price: 10000, limit: 2, t: 78.5, l: 52.5, w: 12.5, h: 11.0 },
+          { id: "MER19-GOSEGU", name: "STICKER PACK", opt: "GOSEGU", price: 10000, limit: 2, t: 78.5, l: 66.0, w: 12.5, h: 11.0 },
+          { id: "MER19-VIICHAN", name: "STICKER PACK", opt: "VIICHAN", price: 10000, limit: 2, t: 78.5, l: 79.5, w: 12.5, h: 11.0 }
+        ]
+      },
+      {
+        page: 8,
+        src: "Berriz_20261111232857(8).jpg",
+        alt: "BLIND ITEM 01~03",
+        spots: [
+          { id: "BLD01", name: "RANDOM CAN BADGE", opt: "RANDOM 1EA", price: 4000, limit: 2, t: 26.5, l: 10.5, w: 35.0, h: 22.0 },
+          { id: "BLD03", name: "RANDOM SD ACRYLIC BLOCK", opt: "RANDOM 1EA", price: 7000, limit: 2, t: 61.5, l: 10.5, w: 35.0, h: 27.5 },
+          { id: "BLD02", name: "RANDOM SEDOLIZ LUCKY DREAM FIGURE", opt: "RANDOM 1EA", price: 12000, limit: 2, t: 24.5, l: 58.0, w: 28.0, h: 65.5 }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = 'across_dimensions_saved_bundles_v1';
+
+    let currentPage = "ALL";
+    let cart = []; // 현재 작업 중인 상품 목록
+    let pendingTshirt = null;
+
+    // 저장된 장바구니 묶음 상태
+    let savedBundles = [];
+    let selectedBundleId = null; // 목록에서 클릭하여 펼쳐진 묶음 ID
+    let editingBundleId = null;  // 현재 '수정' 버튼을 눌러 편집 중인 묶음 ID
+
+    function loadSavedBundles() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) savedBundles = JSON.parse(raw);
+      } catch (e) {
+        savedBundles = [];
+      }
+    }
+
+    function persistBundles() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(savedBundles));
+      } catch (e) {}
+    }
+
+    function selectPage(pageVal, btn) {
+      currentPage = pageVal;
+      document.querySelectorAll('.page-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      renderPosters();
+    }
+
+    function renderPosters() {
+      const container = document.getElementById('posters-container');
+      container.innerHTML = '';
+
+      const targetPages = currentPage === "ALL"
+        ? PAGES
+        : PAGES.filter(p => p.page === currentPage);
+
+      targetPages.forEach(p => {
+        const frame = document.createElement('div');
+        frame.className = 'poster-frame';
+
+        const img = document.createElement('img');
+        img.src = p.src;
+        img.alt = p.alt;
+        frame.appendChild(img);
+
+        p.spots.forEach(spot => {
+          const el = document.createElement('div');
+          el.className = 'hotspot';
+          el.style.top = spot.t + '%';
+          el.style.left = spot.l + '%';
+          el.style.width = spot.w + '%';
+          el.style.height = spot.h + '%';
+          el.dataset.label = `${spot.name} [${spot.opt}] · ₩${spot.price.toLocaleString()}`;
+
+          const matchedItems = cart.filter(c => c.baseId === spot.id);
+          const totalQty = matchedItems.reduce((sum, item) => sum + item.qty, 0);
+          if (totalQty > 0) {
+            const badge = document.createElement('span');
+            badge.className = 'selected-badge';
+            badge.innerText = totalQty;
+            el.appendChild(badge);
+          }
+
+          el.addEventListener('click', () => handleSpotClick(spot));
+          frame.appendChild(el);
+        });
+
+        container.appendChild(frame);
+      });
+    }
+
+    function handleSpotClick(spot) {
+      if (spot.isTshirt) {
+        pendingTshirt = spot;
+        document.getElementById('modal-member-title').innerText = `T-SHIRT [${spot.opt}] 사이즈 선택`;
+        document.getElementById('size-modal').classList.add('open');
+        return;
+      }
+      addItemToCart(spot.id, spot.id, spot.name, spot.opt, spot.price, spot.limit);
+    }
+
+    function confirmTshirtSize(sizeLabel) {
+      if (!pendingTshirt) return;
+      const fullKey = `${pendingTshirt.id}-${sizeLabel}`;
+      const fullOpt = `${sizeLabel} - ${pendingTshirt.opt}`;
+      addItemToCart(fullKey, pendingTshirt.id, pendingTshirt.name, fullOpt, pendingTshirt.price, pendingTshirt.limit);
+      closeSizeModal();
+    }
+
+    function closeSizeModal() {
+      pendingTshirt = null;
+      document.getElementById('size-modal').classList.remove('open');
+    }
+
+    function addItemToCart(key, baseId, name, opt, price, limit) {
+      const existing = cart.find(item => item.key === key);
+      const currentQty = existing ? existing.qty : 0;
+
+      if (currentQty + 1 > limit) {
+        alert(`[구매 수량 제한 안내]\n"${name} (${opt})" 상품은 1인 최대 ${limit}개까지만 구매 가능합니다.`);
+        return;
+      }
+
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ key, baseId, name, opt, price, limit, qty: 1 });
+      }
+
+      renderCart();
+      renderPosters();
+    }
+
+    function updateQty(key, delta) {
+      const item = cart.find(c => c.key === key);
+      if (!item) return;
+
+      const nextQty = item.qty + delta;
+      if (nextQty <= 0) {
+        removeCartItem(key);
+        return;
+      }
+      if (nextQty > item.limit) {
+        alert(`[구매 수량 제한 안내]\n해당 옵션은 1인 최대 ${item.limit}개까지만 구매 가능합니다.`);
+        return;
+      }
+      item.qty = nextQty;
+      renderCart();
+      renderPosters();
+    }
+
+    function removeCartItem(key) {
+      cart = cart.filter(c => c.key !== key);
+      renderCart();
+      renderPosters();
+    }
+
+    function clearCart() {
+      cart = [];
+      renderCart();
+      renderPosters();
+    }
+
+    function updateBenefits(total) {
+      const nowEl = document.getElementById('benefit-now');
+      const tipEl = document.getElementById('benefit-tip');
+      const barEl = document.getElementById('benefit-bar');
+
+      barEl.style.width = `${Math.min(100, (total / 300000) * 100)}%`;
+
+      if (total < 50000) {
+        nowEl.innerText = "현재 증정 특전: 없음";
+        tipEl.innerText = `▶ ${(50000 - total).toLocaleString()}원 추가 시 [포토카드 랜덤 1종] 증정!`;
+        return "없음";
+      }
+
+      const sets = Math.floor(total / 300000);
+      const rem = total % 300000;
+      const randoms = Math.floor(rem / 50000);
+
+      const parts = [];
+      if (sets > 0) parts.push(`포토카드 6종 1세트 × ${sets}`);
+      if (randoms > 0) parts.push(`포토카드 랜덤 ${randoms}종`);
+
+      const text = parts.join(" + ");
+      nowEl.innerText = `증정: ${text}`;
+
+      const next50 = 50000 - (total % 50000);
+      const next300 = 300000 - (total % 300000);
+
+      if (next300 <= 50000) {
+        tipEl.innerText = `▶ ${next300.toLocaleString()}원 추가 시 [포토카드 6종 1세트] 등급 달성!`;
+      } else {
+        tipEl.innerText = `▶ ${next50.toLocaleString()}원 추가 시 [포토카드 랜덤 1종] 추가 증정!`;
+      }
+      return text;
+    }
+
+    function renderCart() {
+      const listEl = document.getElementById('cart-items');
+      const qtyEl = document.getElementById('cart-total-qty');
+      const priceEl = document.getElementById('total-price');
+
+      const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+      qtyEl.innerText = totalQty;
+
+      if (cart.length === 0) {
+        listEl.innerHTML = '<div class="cart-empty">왼쪽 이미지에서 원하는 캐릭터나<br>굿즈를 클릭해 추가해 주세요.</div>';
+        priceEl.innerText = '0';
+        updateBenefits(0);
+        return;
+      }
+
+      listEl.innerHTML = '';
+      let total = 0;
+
+      cart.forEach(item => {
+        const sub = item.price * item.qty;
+        total += sub;
+
+        const row = document.createElement('div');
+        row.className = 'cart-row';
+        row.innerHTML = `
+          <div class="cart-row-info">
+            <div class="cart-row-title" title="${item.name}">${item.name}</div>
+            <div class="cart-row-opt">${item.opt}</div>
+            <div class="cart-row-price">₩${sub.toLocaleString()}</div>
+          </div>
+          <div class="qty-box">
+            <button onclick="updateQty('${item.key}', -1)">-</button>
+            <span>${item.qty}</span>
+            <button onclick="updateQty('${item.key}', 1)">+</button>
+          </div>
+          <button class="remove-row" onclick="removeCartItem('${item.key}')">✕</button>
+        `;
+        listEl.appendChild(row);
+      });
+
+      priceEl.innerText = total.toLocaleString();
+      updateBenefits(total);
+    }
+
+    /* ==========================================================
+       장바구니 묶음 생성 / 수정 / 삭제 관련 로직
+    ========================================================== */
+
+    // "장바구니에 담기" 또는 "수정 내용 저장하기" 버튼 클릭
+    function handleMainAction() {
+      if (cart.length === 0) {
+        alert("선택된 상품이 없습니다. 포스터에서 물품을 먼저 클릭해 주세요!");
+        return;
+      }
+
+      // 수정 모드일 경우: 기존 묶음 덮어쓰기
+      if (editingBundleId) {
+        const idx = savedBundles.findIndex(b => b.id === editingBundleId);
+        if (idx !== -1) {
+          savedBundles[idx].items = JSON.parse(JSON.stringify(cart));
+          persistBundles();
+          const updatedName = savedBundles[idx].name;
+          selectedBundleId = editingBundleId;
+          exitEditMode(true);
+          renderSavedBundles();
+          alert(`"${updatedName}" 장바구니 묶음이 수정되었습니다.`);
+        }
+        return;
+      }
+
+      // 일반 모드일 경우: 장바구니 이름 지정 모달 오픈
+      const inputEl = document.getElementById('bundle-name-input');
+      inputEl.value = `장바구니 묶음 ${savedBundles.length + 1}`;
+      document.getElementById('bundle-name-modal').classList.add('open');
+      setTimeout(() => {
+        inputEl.focus();
+        inputEl.select();
+      }, 50);
+    }
+
+    function closeBundleNameModal() {
+      document.getElementById('bundle-name-modal').classList.remove('open');
+    }
+
+    function saveNewBundle() {
+      const inputEl = document.getElementById('bundle-name-input');
+      const bundleName = inputEl.value.trim();
+      if (!bundleName) {
+        alert("장바구니 이름을 입력해 주세요.");
+        inputEl.focus();
+        return;
+      }
+
+      const newBundle = {
+        id: 'bundle_' + Date.now(),
+        name: bundleName,
+        items: JSON.parse(JSON.stringify(cart)),
+        createdAt: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+      };
+
+      savedBundles.unshift(newBundle);
+      persistBundles();
+
+      selectedBundleId = newBundle.id;
+      cart = []; // 담은 후 현재 작업 공간 비우기
+      closeBundleNameModal();
+
+      renderCart();
+      renderPosters();
+      renderSavedBundles();
+    }
+
+    // 장바구니 목록에서 묶음 선택 토글
+    function toggleSelectBundle(bundleId) {
+      if (selectedBundleId === bundleId) {
+        selectedBundleId = null;
+      } else {
+        selectedBundleId = bundleId;
+      }
+      renderSavedBundles();
+    }
+
+    // 수정 버튼 클릭: 해당 묶음의 상품들을 상단 작업 공간으로 불러와 추가/제거 가능하게 전환
+    function startEditBundle(event, bundleId) {
+      event.stopPropagation();
+      const target = savedBundles.find(b => b.id === bundleId);
+      if (!target) return;
+
+      editingBundleId = bundleId;
+      selectedBundleId = bundleId;
+      cart = JSON.parse(JSON.stringify(target.items));
+
+      // UI를 수정 모드로 변경
+      document.getElementById('cart-sidebar').classList.add('editing-mode');
+      const banner = document.getElementById('edit-mode-banner');
+      banner.classList.add('active');
+      document.getElementById('editing-bundle-title').innerText = `[${target.name}]`;
+
+      const actionBtn = document.getElementById('main-action-btn');
+      actionBtn.innerText = "수정 내용 저장하기";
+      actionBtn.classList.add('save-edit');
+
+      renderCart();
+      renderPosters();
+      renderSavedBundles();
+
+      // 상단으로 스크롤하여 편집 목록 바로 확인
+      document.getElementById('cart-sidebar').scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelEditMode() {
+      exitEditMode(true);
+      renderSavedBundles();
+    }
+
+    function exitEditMode(clearWorkspace) {
+      editingBundleId = null;
+      document.getElementById('cart-sidebar').classList.remove('editing-mode');
+      document.getElementById('edit-mode-banner').classList.remove('active');
+
+      const actionBtn = document.getElementById('main-action-btn');
+      actionBtn.innerText = "장바구니에 담기";
+      actionBtn.classList.remove('save-edit');
+
+      if (clearWorkspace) {
+        cart = [];
+        renderCart();
+        renderPosters();
+      }
+    }
+
+    // 삭제 버튼 클릭
+    function deleteBundle(event, bundleId) {
+      event.stopPropagation();
+      const target = savedBundles.find(b => b.id === bundleId);
+      if (!target) return;
+
+      if (!confirm(`"${target.name}" 장바구니 묶음을 삭제하시겠습니까?`)) return;
+
+      savedBundles = savedBundles.filter(b => b.id !== bundleId);
+      persistBundles();
+
+      if (selectedBundleId === bundleId) selectedBundleId = null;
+      if (editingBundleId === bundleId) exitEditMode(true);
+
+      renderSavedBundles();
+    }
+
+    function renderSavedBundles() {
+      const listEl = document.getElementById('saved-carts-list');
+      const badgeEl = document.getElementById('saved-count-badge');
+      badgeEl.innerText = `${savedBundles.length}개 묶음`;
+
+      if (savedBundles.length === 0) {
+        listEl.innerHTML = '<div class="saved-empty">저장된 장바구니 묶음이 없습니다.<br>상품을 담은 후 \'장바구니에 담기\'를 눌러보세요.</div>';
+        return;
+      }
+
+      listEl.innerHTML = '';
+
+      savedBundles.forEach(bundle => {
+        const totalQty = bundle.items.reduce((s, i) => s + i.qty, 0);
+        const totalPrice = bundle.items.reduce((s, i) => s + i.price * i.qty, 0);
+        const isSelected = selectedBundleId === bundle.id;
+        const isEditing = editingBundleId === bundle.id;
+
+        const card = document.createElement('div');
+        card.className = `bundle-card ${isSelected ? 'selected' : ''} ${isEditing ? 'editing' : ''}`;
+        card.onclick = () => toggleSelectBundle(bundle.id);
+
+        const itemsHtml = bundle.items.map(item => `
+          <li>
+            <span>• ${item.name} (${item.opt})</span>
+            <span><strong>${item.qty}개</strong> · ${(item.price * item.qty).toLocaleString()}원</span>
+          </li>
+        `).join('');
+
+        card.innerHTML = `
+          <div class="bundle-top">
+            <div class="bundle-name">
+              <span>${bundle.name}</span>
+              ${isEditing ? '<span class="bundle-tag">수정 중</span>' : ''}
+            </div>
+            <span style="font-size:0.75rem; color:#8b85a8;">${isSelected ? '▲' : '▼'}</span>
+          </div>
+          <div class="bundle-meta">
+            <span>총 ${totalQty}개 품목</span>
+            <strong>${totalPrice.toLocaleString()}원</strong>
+          </div>
+          <div class="bundle-detail">
+            <ul class="bundle-items-preview">
+              ${itemsHtml}
+            </ul>
+            <div class="bundle-actions">
+              <button class="btn-edit-bundle" onclick="startEditBundle(event, '${bundle.id}')">✏️ 수정 (상품 추가/제거)</button>
+              <button class="btn-delete-bundle" onclick="deleteBundle(event, '${bundle.id}')">🗑️ 삭제</button>
+            </div>
+          </div>
+        `;
+
+        listEl.appendChild(card);
+      });
+    }
+
+    // 초기 실행
+    loadSavedBundles();
+    renderPosters();
+    renderSavedBundles();
+  </script>
+</body>
+</html>
